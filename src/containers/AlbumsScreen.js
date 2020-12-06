@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import Screen from "../components/Screen";
 import getData from "../api/getData";
 import AppContext from "../context/AppContext";
+import Header from "../components/Header";
+import ListItem from "../components/ListItem";
 
 const AlbumsScreen = ({ position }) => {
   const [data, setData] = useState(null);
@@ -12,7 +14,6 @@ const AlbumsScreen = ({ position }) => {
 
   useEffect(() => {
     if (!selectedUser) {
-      setData(null);
       return;
     }
 
@@ -25,31 +26,26 @@ const AlbumsScreen = ({ position }) => {
     getAlbums();
   }, [selectedUser]);
 
-  console.log("albums", data);
+  const albumsList = data
+    ? data.map(item => ({
+        id: item.id,
+        title: item.title,
+        onClick: () => setSelectedAlbum(item),
+      }))
+    : [];
 
   return (
     <Screen position={position}>
-      <h2 className="text-xl">
-        {selectedUser ? `${selectedUser.name}'s Albums` : "Albums"}
-      </h2>
-      <button
-        type="button"
-        onClick={() => setSelectedUser(null)}
-        className="w-12 text-left"
-      >
-        Back
-      </button>
+      <Header
+        title={selectedUser && `${selectedUser.name}'s Albums`}
+        onBack={() => setSelectedUser(null)}
+      />
 
-      {data &&
-        data.map(album => (
-          <button
-            key={album.id}
-            type="button"
-            onClick={() => setSelectedAlbum(album)}
-          >
-            {album.title}
-          </button>
+      <ul>
+        {albumsList.map(item => (
+          <ListItem key={item.id} title={item.title} onClick={item.onClick} />
         ))}
+      </ul>
     </Screen>
   );
 };

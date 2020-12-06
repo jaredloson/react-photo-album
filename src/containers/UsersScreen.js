@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import Screen from "../components/Screen";
 import getData from "../api/getData";
 import AppContext from "../context/AppContext";
+import Header from "../components/Header";
+import ListItem from "../components/ListItem";
 
 const UsersScreen = ({ position }) => {
   const [data, setData] = useState(null);
@@ -17,22 +19,23 @@ const UsersScreen = ({ position }) => {
     getUsers();
   }, []);
 
-  console.log("users", data);
+  const usersList = data
+    ? data.map(item => ({
+        id: item.id,
+        title: item.name,
+        onClick: () => setSelectedUser(item),
+      }))
+    : [];
 
   return (
     <Screen position={position}>
-      <h2 className="text-xl">All Users</h2>
+      <Header title="All Users" />
 
-      {data &&
-        data.map(user => (
-          <button
-            key={user.id}
-            type="button"
-            onClick={() => setSelectedUser(user)}
-          >
-            {user.name}
-          </button>
+      <ul>
+        {usersList.map(item => (
+          <ListItem key={item.id} title={item.title} onClick={item.onClick} />
         ))}
+      </ul>
     </Screen>
   );
 };

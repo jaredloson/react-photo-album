@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Screen from "../components/Screen";
 import getData from "../api/getData";
 import AppContext from "../context/AppContext";
+import Header from "../components/Header";
 
 const PhotosScreen = ({ position }) => {
   const [data, setData] = useState(null);
@@ -22,20 +23,12 @@ const PhotosScreen = ({ position }) => {
     getPhotos();
   }, [selectedAlbum]);
 
-  console.log("photos", data);
-
   return (
     <Screen position={position}>
-      <h2 className="text-xl">
-        {selectedAlbum ? selectedAlbum.title : "Photos"}
-      </h2>
-      <button
-        type="button"
-        onClick={() => setSelectedAlbum(null)}
-        className="w-12 text-left"
-      >
-        Back
-      </button>
+      <Header
+        title={selectedAlbum && selectedAlbum.title}
+        onBack={() => setSelectedAlbum(null)}
+      />
 
       <div className="flex flex-wrap m-1">
         {data &&
